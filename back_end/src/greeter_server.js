@@ -7,13 +7,12 @@
 
 // define "proper" constants
 const PROTO_PATH = __dirname + '/../../protos/greeter.proto';
-const LOGS_PATH = __dirname + '/../logs/';
+// const LOGS_PATH = __dirname + '/../logs/';
 
 // define winston logging
 const winston = require('winston');
 const logger = winston.createLogger({
   level: 'debug',
-  // format: winston.format.json(),
   format: winston.format.combine(
       // winston.format.json()
       winston.format.colorize({all: true}),
@@ -51,10 +50,9 @@ const helloProto = grpc.loadPackageDefinition(packageDefinition).helloworld;
 logger.info('applicaiton setup targeting', {process: process.env.NODE_ENV});
 if (process.env.NODE_ENV !== 'production') {
   // ignore any envrionment variables stored in .env file in production
-  let text= __dirname+'\\.env';
-  
-  logger.info('loading environmental variables from %s', text);
-  require('dotenv').config({path: text});
+
+  logger.info('loading environmental variables from s');
+  require('dotenv').config({path: __dirname+'\\.env'});
 }
 
 /**

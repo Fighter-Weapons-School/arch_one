@@ -17,6 +17,6 @@
   },
   "scripts": {
     "start" : "SET NODE_ENV=development&&node src/greeter_server.js",
-    "dev" : "SET NODE_ENV=development&&node src/greeter_server.js"
+    "dev" : "SET NODE_ENV=development&&SET GRPC_VERBOSITY=DEBUG&&SET GRPC_TRACE=all&&node src/greeter_server.js"
   }
 }
