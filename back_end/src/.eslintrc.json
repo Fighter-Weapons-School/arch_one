@@ -11,5 +11,8 @@
         "sourceType": "module"
     },
     "rules": {
+        "max-len": "off",
+        "linebreak-style" : "off",
+        "no-trailing-spaces" : "off"
     }
 }
