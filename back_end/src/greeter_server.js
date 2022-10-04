@@ -1,13 +1,14 @@
+// TODO: add version and host information
+// TODO: make logging better?
+// TODO: fix how helper function works. return the concatenated string or a tuple
 // TODO: call back a function rather than inline.
-// TODO: Add logging and metrics collection.
-// TODO: Add light error handling
-// TODO: Tests to ensure environment vars are only used in development
-// TODO: Tests to ensure environment vars are set
-// TODO: Tests to ensure environment vars can be overridden
+// TODO: add logging and metrics collection.
 
 // define "proper" constants
 const PROTO_PATH = __dirname + '/../../protos/greeter.proto';
 // const LOGS_PATH = __dirname + '/../logs/';
+
+const helper = require('./helper');
 
 // define winston logging
 const winston = require('winston');
@@ -15,6 +16,7 @@ const logger = winston.createLogger({
   level: 'debug',
   format: winston.format.combine(
       // winston.format.json()
+      winston.format.splat(),
       winston.format.colorize({all: true}),
       winston.format.label({
         label: '[LOGGER]',
@@ -32,7 +34,12 @@ const logger = winston.createLogger({
   ],
 });
 
-logger.info('grpc dynamically create the services defined in the proto file');
+logger.info('applicaiton startup in mode: %s', {process: process.env.NODE_ENV});
+logger.info('applicaiton startup ', {process: process.env.NODE_ENV});
+
+//console.log (process);
+
+logger.silly('grpc dynamically create the services defined in the proto file');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const packageDefinition = protoLoader.loadSync(
@@ -44,16 +51,8 @@ const packageDefinition = protoLoader.loadSync(
       defaults: true,
       oneofs: true,
     });
-logger.info('grpc map to the proto file package definition');
+logger.silly('grpc map to the proto file package definition');
 const helloProto = grpc.loadPackageDefinition(packageDefinition).helloworld;
-
-logger.info('applicaiton setup targeting', {process: process.env.NODE_ENV});
-if (process.env.NODE_ENV !== 'production') {
-  // ignore any envrionment variables stored in .env file in production
-
-  logger.info('loading environmental variables from s');
-  require('dotenv').config({path: __dirname+'\\.env'});
-}
 
 /**
  * Implementation of the proto 'SayHello' method
@@ -65,28 +64,13 @@ function sayHello(call, callback) {
 }
 
 /**
- *
- */
-function initForGrpcServer() {
-  if (!process.env.GREETER_IP) {
-    logger.error('Environment variable must be set', {'ENVIRONMENT VARIABLE': 'GREETER_IP'});
-    throw new Error('environment variable GREETER_IP not set');
-  }
-
-  if (!process.env.GREETER_PORT) {
-    logger.error('Environment variable must be set', {'ENVIRONMENT VARIABLE': 'GREETER_PORT'});
-    throw new Error('environment variable GREETER_PORT not set');
-  }
-}
-
-/**
  * Starts an RPC server that receives requests for the Greeter service at the sample server port
  * @param {*} serverIpAndPort 
  */
 function runGrpcServer(serverIpAndPort) {
   const server = new grpc.Server();
-
-  logger.info('starting grpc server @ %s', serverIpAndPort);
+  
+  logger.log('info', 'starting grpc server @ %s', serverIpAndPort);
   server.addService(helloProto.Greeter.service, {sayHello: sayHello});
   server.bindAsync(serverIpAndPort, grpc.ServerCredentials.createInsecure(), () => {
     server.start();
@@ -97,10 +81,15 @@ function runGrpcServer(serverIpAndPort) {
  *
  */
 function main() {
-  initForGrpcServer();
-  const environmentIpAndPort = `${process.env.GREETER_IP}:${process.env.GREETER_PORT}`;
+  try {
+    helper.initForGrpcServer();
+  } catch (error) {
+    logger.error(error);
+  }
+  const environmentIpAndPortCombined = `${process.env.GREETER_IP}:${process.env.GREETER_PORT}`;
 
-  runGrpcServer(environmentIpAndPort);
+  runGrpcServer(environmentIpAndPortCombined);
 }
 
+// start main()
 main();
