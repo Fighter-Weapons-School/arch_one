@@ -1,8 +1,8 @@
 // TODO: add version and host information
 // TODO: make logging better?
-// TODO: fix how helper function works. return the concatenated string or a tuple
 // TODO: call back a function rather than inline.
 // TODO: add logging and metrics collection.
+// TODO: add better code comments
 
 // define "proper" constants
 const PROTO_PATH = __dirname + '/../../protos/greeter.proto';
@@ -36,8 +36,6 @@ const logger = winston.createLogger({
 
 logger.info('applicaiton startup in mode: %s', {process: process.env.NODE_ENV});
 logger.info('applicaiton startup ', {process: process.env.NODE_ENV});
-
-//console.log (process);
 
 logger.silly('grpc dynamically create the services defined in the proto file');
 const grpc = require('@grpc/grpc-js');
@@ -81,15 +79,16 @@ function runGrpcServer(serverIpAndPort) {
  *
  */
 function main() {
+  let grpcServerBinding;
+
   try {
-    helper.initForGrpcServer();
+    grpcServerBinding = helper.initForGrpcServer();
   } catch (error) {
     logger.error(error);
   }
-  const environmentIpAndPortCombined = `${process.env.GREETER_IP}:${process.env.GREETER_PORT}`;
+  const environmentIpAndPortCombined = `${grpcServerBinding.bindHost}:${grpcServerBinding.bindPort}`;
 
   runGrpcServer(environmentIpAndPortCombined);
 }
 
-// start main()
 main();

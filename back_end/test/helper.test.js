@@ -46,5 +46,9 @@ test("Test succeeds when both GREETER_IP AND GREETER_PORT are set", () => {
   process.env['GREETER_IP'] = '0.0.0.0';
   process.env['GREETER_PORT'] = '12345';
 
+  let grpcServerBinding = helper.initForGrpcServer();
+
   expect(helper.initForGrpcServer).not.toThrow();
+  expect(grpcServerBinding.bindHost).toBe('0.0.0.0')
+  expect(grpcServerBinding.bindPort).toBe('12345')
 });
