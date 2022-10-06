@@ -101,9 +101,8 @@ function main() {
   } catch (error) {
     logger.error(error);
   }
-  runGrpcServer(environmentIpAndPortCombined);
 
-  if (!environmentIpAndPortCombined) {
+  if (environmentIpAndPortCombined) {
     runGrpcServer(environmentIpAndPortCombined);
   } else {
     logger.error('application parameters not set. Exiting.');
