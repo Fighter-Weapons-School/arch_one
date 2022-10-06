@@ -1,7 +1,15 @@
 *~
+
+#modules
 node_modules
 
 #logs
 logs
 *.log
 npm-debug.log
+
+#tests
+coverage
+
+#jsdoc output
+docs
