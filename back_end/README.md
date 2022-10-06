@@ -67,5 +67,12 @@ npm run start
 npm test
 ```
 
+### Generating jsdoc Documentation
+```bat
+:: execute npm command to generate the js2doc documentation
+:: documentation results are stored in arch_one\back_end\docs
+npm run doc
+```
+
 ## Container Operations
 T.B.D

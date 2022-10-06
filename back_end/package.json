@@ -14,11 +14,13 @@
   "devDependencies": {
     "eslint": "^8.24.0",
     "eslint-config-google": "^0.14.0",
-    "jest": "^29.1.2"
+    "jest": "^29.1.2",
+    "jsdoc": "^3.6.11"
   },
   "scripts": {
     "start": "SET NODE_ENV=production&&node src/greeter_server.js",
     "dev": "SET NODE_ENV=development&&SET GREETER_PORT=50051&&SET GREETER_IP=0.0.0.0&&SET GRPC_VERBOSITY=DEBUG&&SET GRPC_TRACE=all&&node src/greeter_server.js",
-    "test": "jest"
+    "test": "jest",
+    "doc": "jsdoc -c .\\jsdoc.json"
   }
 }

@@ -1,5 +1,5 @@
 /**
- *
+ * Method to abstract away the environment variables away from the main application.
  * @return {string}
  */
 function initForGrpcServer() {

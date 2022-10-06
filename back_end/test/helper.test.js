@@ -40,7 +40,7 @@ test("Test throws error when GREETER_PORT is not set", () => {
 });
 
 /**
- * 
+ * Test that valid configuration results in no exception, and values are set as expected
  */
 test("Test succeeds when both GREETER_IP AND GREETER_PORT are set", () => {  
   process.env['GREETER_IP'] = '0.0.0.0';

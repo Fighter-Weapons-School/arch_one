@@ -1,12 +1,10 @@
 // TODO: add version and host information
 // TODO: make logging better?
-// TODO: call back a function rather than inline.
 // TODO: add logging and metrics collection.
-// TODO: add better code comments
 
 // define "proper" constants
 const PROTO_PATH = __dirname + '/../../protos/greeter.proto';
-// const LOGS_PATH = __dirname + '/../logs/';
+const LOGS_PATH = __dirname + '/../logs/';
 
 const helper = require('./helper');
 
@@ -54,16 +52,29 @@ const helloProto = grpc.loadPackageDefinition(packageDefinition).helloworld;
 
 /**
  * Implementation of the proto 'SayHello' method
- * @param {*} call
- * @param {*} callback
+ * @param {EventEmitter} call Call object for the handler to process
+ * @param {function(Error, feature)} callback Response callback
  */
 function sayHello(call, callback) {
-  callback(null, {message: 'Hello ' + call.request.name});
+  callback(null, checkFeature(call.request));
+}
+
+/**
+ * Return a cordial greeting.
+ * @param {sayHelloMsg} sayHelloMsg contains the name
+ * @return {messageToReturn} The cordial message
+ */
+function checkFeature(sayHelloMsg) {
+  const messageToReturn = {
+    message: 'Hello ' + sayHelloMsg.name,
+  };
+
+  return messageToReturn;
 }
 
 /**
  * Starts an RPC server that receives requests for the Greeter service at the sample server port
- * @param {*} serverIpAndPort 
+ * @param {string} serverIpAndPort - The grpc server ip address and port in the format "X.X.X.X:YYYYY"
  */
 function runGrpcServer(serverIpAndPort) {
   const server = new grpc.Server();
@@ -76,19 +87,27 @@ function runGrpcServer(serverIpAndPort) {
 }
 
 /**
- *
+ * Main function
+ * Initially call into helper functions and build the string contianing the grpc server and ip.
+ * Only attempt to start the server when input is (mildly) validated.
  */
 function main() {
   let grpcServerBinding;
+  let environmentIpAndPortCombined = '';
 
   try {
     grpcServerBinding = helper.initForGrpcServer();
+    environmentIpAndPortCombined = `${grpcServerBinding.bindHost}:${grpcServerBinding.bindPort}`;
   } catch (error) {
     logger.error(error);
   }
-  const environmentIpAndPortCombined = `${grpcServerBinding.bindHost}:${grpcServerBinding.bindPort}`;
-
   runGrpcServer(environmentIpAndPortCombined);
+
+  if (!environmentIpAndPortCombined) {
+    runGrpcServer(environmentIpAndPortCombined);
+  } else {
+    logger.error('application parameters not set. Exiting.');
+  }
 }
 
 main();
