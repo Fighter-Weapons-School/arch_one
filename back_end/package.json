@@ -20,6 +20,7 @@
   "scripts": {
     "start": "SET NODE_ENV=production&&node src/greeter_server.js",
     "dev": "SET NODE_ENV=development&&SET GREETER_PORT=50051&&SET GREETER_IP=0.0.0.0&&SET GRPC_VERBOSITY=DEBUG&&SET GRPC_TRACE=all&&node src/greeter_server.js",
+    "linux_dev": "export NODE_ENV=development GREETER_PORT=50051 GREETER_IP=0.0.0.0 GRPC_VERBOSITY=DEBUG GRPC_TRACE=all && node src/greeter_server.js",
     "test": "jest",
     "doc": "jsdoc -c .\\jsdoc.json"
   }
