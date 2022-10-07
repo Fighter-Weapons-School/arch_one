@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option go_package = "github.com/Fighter-Weapons-School/arch_one/front_end/";
+
 package helloworld;
 
 // The greeting service definition.
