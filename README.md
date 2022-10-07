@@ -2,6 +2,12 @@
 
 Taking architecture concepts and putting them into practice
 
-## High Level Architecture
+## v0.1 High Level Architecture
 
-![Alt text](./doc/image%20high-level%20architecture.svg)
+![Alt text](./doc/image%20high-level%20architecture%20v0.1.svg)
+
+## v0.2 High Level Architecture
+
+![Alt text](./doc/image%20high-level%20architecture%20v0.2.svg)
+
+
