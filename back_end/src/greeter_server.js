@@ -1,6 +1,7 @@
 // TODO: add version and host information
 // TODO: make logging better?
 // TODO: add logging and metrics collection.
+// TODO: add greeter_client code to test (rather than separate module)
 
 // define "proper" constants
 const PROTO_PATH = __dirname + '/../../protos/greeter.proto';
@@ -13,7 +14,7 @@ const winston = require('winston');
 const logger = winston.createLogger({
   level: 'debug',
   format: winston.format.combine(
-      // winston.format.json()
+      // winston.format.json(),
       winston.format.splat(),
       winston.format.colorize({all: true}),
       winston.format.label({
@@ -33,7 +34,6 @@ const logger = winston.createLogger({
 });
 
 logger.info('applicaiton startup in mode: %s', {process: process.env.NODE_ENV});
-logger.info('applicaiton startup ', {process: process.env.NODE_ENV});
 
 logger.silly('grpc dynamically create the services defined in the proto file');
 const grpc = require('@grpc/grpc-js');
@@ -73,14 +73,26 @@ function checkFeature(sayHelloMsg) {
 }
 
 /**
+ * Get a new server with the handler functions in this file bound to the methods it serves.
+ * @return {server} The new server object
+ */
+function getServer() {
+  const server = new grpc.Server();
+
+  logger.log('info', 'adding services to grpc server @ %s', 'sayHello');
+  server.addService(helloProto.Greeter.service, {sayHello: sayHello});
+
+  return server;
+}
+
+/**
  * Starts an RPC server that receives requests for the Greeter service at the sample server port
  * @param {string} serverIpAndPort - The grpc server ip address and port in the format "X.X.X.X:YYYYY"
  */
 function runGrpcServer(serverIpAndPort) {
-  const server = new grpc.Server();
+  const server = getServer();
   
   logger.log('info', 'starting grpc server @ %s', serverIpAndPort);
-  server.addService(helloProto.Greeter.service, {sayHello: sayHello});
   server.bindAsync(serverIpAndPort, grpc.ServerCredentials.createInsecure(), () => {
     server.start();
   });

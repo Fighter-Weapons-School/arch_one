@@ -10,6 +10,7 @@
 | GRPC_TRACE    | Flag to enable additional logging of the grpc internals (must be used in conjunction with GRPC_VERBOSITY)|  Optional                    | `all`                     |
 
 [Additioanl GRPC Environment Variables](https://github.com/grpc/grpc/blob/master/doc/environment_variables.md)
+[Debug GRPC Environment Variables](https://github.com/grpc/grpc-node/blob/master/TROUBLESHOOTING.md)
 
 ## Environment Installation
 
